@@ -1,0 +1,14 @@
+body {
+  background: lighten(#eef1f3, 20%);
+  padding: 150px 100px;
+  text-align: center;
+  color: #808187
+}
+
+a {
+  color: #525358;
+  text-decoration: none;
+  &:hover{
+    text-decoration: none;
+  }
+}

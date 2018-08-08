@@ -4,6 +4,7 @@
 
 const path = require('path');
 const webpack = require('webpack');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 // Remove this line once the following warning goes away (it was meant for webpack loader authors not users):
 // 'DeprecationWarning: loaderUtils.parseQuery() received a non-string value which can be problematic,
@@ -32,6 +33,24 @@ module.exports = options => ({
           loader: 'babel-loader',
           options: options.babelQuery,
         },
+      },
+      {
+        test: /\.scss$/,
+        use: [
+          process.env.NODE_ENV === 'development'
+            ? 'style-loader'
+            : MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              sourceMap: true,
+              importLoader: 2,
+              localIdentName: '[hash:base64:5]',
+            },
+          },
+          'sass-loader',
+        ],
       },
       {
         // Preprocess our own .css files
@@ -114,6 +133,11 @@ module.exports = options => ({
     ],
   },
   plugins: options.plugins.concat([
+    new MiniCssExtractPlugin({
+      fileName: 'styles.css',
+      chunkFilename: '[name][contenthash].css',
+      allChunks: true,
+    }),
     new webpack.ProvidePlugin({
       // make fetch available
       fetch: 'exports-loader?self.fetch!whatwg-fetch',
